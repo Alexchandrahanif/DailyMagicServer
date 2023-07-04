@@ -10,15 +10,13 @@ const {
 } = require("../models/index");
 
 const {
+  hashingPassword,
   comparePassword,
   createAccessToken,
-  hashingPassword,
+  verifyAccessToken,
 } = require("../helper/helper");
 
 const { Op } = require("sequelize");
-const { Success, Failed } = require("../helper/logs");
-const lastActive = require("../helper/lastActive");
-const { default: axios } = require("axios");
 const formatPhoneNumber = require("../helper/formatPhoneNumber");
 const formatAngka = require("../helper/formatAngka");
 const remove = require("../helper/removeFile");
@@ -42,6 +40,8 @@ class Controller {
         address,
       };
 
+      console.log(req.file);
+
       // CREATE NEW USER
       const dataUser = await User.create(data, { transaction: t });
 
@@ -63,15 +63,7 @@ class Controller {
     const t = await sequelize.transaction();
     try {
       // REQUEST
-      const { email, password, deviceId } = req.body;
-
-      // VALIDASI INPUT
-      if (!email) {
-        throw { name: "Mohon Masukkan Email" };
-      }
-      if (!password) {
-        throw { name: "Mohon Masukkan Password" };
-      }
+      const { email, password } = req.body;
 
       // VALIDASI FIND USER
       const dataUser = await User.findOne({
@@ -104,7 +96,7 @@ class Controller {
       // SUCCESS
       res.status(200).json({
         statusCode: 200,
-        authorization: authorization,
+        data: { authorization, id: dataUser.id },
       });
     } catch (error) {
       await t.rollback();
