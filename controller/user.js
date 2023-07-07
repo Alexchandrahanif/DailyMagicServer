@@ -111,7 +111,7 @@ class Controller {
 
       let pagination = {
         where: {
-          flagDeleted: false,
+          softDeleted: false,
         },
         attributes: {
           exclude: ["password"],

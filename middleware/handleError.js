@@ -36,6 +36,24 @@ const handleError = (err, req, res, next) => {
   } else if (err.name === "Id User Tidak Ditemukan") {
     code = 400;
     message = "Id User Tidak Ditemukan";
+  } else if (err.name === "Id Income Tidak Ditemukan") {
+    code = 400;
+    message = "Id Income Tidak Ditemukan";
+  }
+
+  //
+  else if (err.name === "Id User Tidak Ditemukan") {
+    code = 400;
+    message = "Id User Tidak Ditemukan";
+  } else if (err.name === "Id User Tidak Ditemukan") {
+    code = 400;
+    message = "Id User Tidak Ditemukan";
+  } else if (err.name === "Id User Tidak Ditemukan") {
+    code = 400;
+    message = "Id User Tidak Ditemukan";
+  } else if (err.name === "Id User Tidak Ditemukan") {
+    code = 400;
+    message = "Id User Tidak Ditemukan";
   }
 
   // JSON
