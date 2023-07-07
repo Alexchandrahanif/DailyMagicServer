@@ -32,7 +32,7 @@ module.exports = {
         onDelete: "cascade",
         onUpdate: "cascade",
       },
-      IncomeCategoryId: {
+      SpendingCategoryId: {
         type: Sequelize.UUID,
         references: {
           model: "SpendingCategories",

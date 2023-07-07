@@ -39,21 +39,18 @@ const handleError = (err, req, res, next) => {
   } else if (err.name === "Id Income Tidak Ditemukan") {
     code = 400;
     message = "Id Income Tidak Ditemukan";
-  }
-
-  //
-  else if (err.name === "Id User Tidak Ditemukan") {
+  } else if (err.name === "Id Spending Tidak Ditemukan") {
     code = 400;
-    message = "Id User Tidak Ditemukan";
-  } else if (err.name === "Id User Tidak Ditemukan") {
+    message = "Id Spending Tidak Ditemukan";
+  } else if (err.name === "Id Saving Tidak Ditemukan") {
     code = 400;
-    message = "Id User Tidak Ditemukan";
-  } else if (err.name === "Id User Tidak Ditemukan") {
+    message = "Id Saving Tidak Ditemukan";
+  } else if (err.name === "Id Income Categories Tidak Ditemukan") {
     code = 400;
-    message = "Id User Tidak Ditemukan";
-  } else if (err.name === "Id User Tidak Ditemukan") {
+    message = "Id Income Categories Tidak Ditemukan";
+  } else if (err.name === "Id Spending Categories Tidak Ditemukan") {
     code = 400;
-    message = "Id User Tidak Ditemukan";
+    message = "Id Spending Categories Tidak Ditemukan";
   }
 
   // JSON

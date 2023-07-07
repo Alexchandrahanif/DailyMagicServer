@@ -3,7 +3,7 @@ const { Income } = require("../models");
 
 class Controller {
   // GET ALL
-  static async getAll(req, res, next) {
+  static async getAllIncome(req, res, next) {
     try {
       const { limit, page, search, tanggal } = req.query;
 
@@ -43,7 +43,7 @@ class Controller {
   }
 
   // GET ONE
-  static async getOne(req, res, next) {
+  static async getOneIncome(req, res, next) {
     try {
       const { id } = req.params;
 
@@ -67,7 +67,7 @@ class Controller {
   }
 
   // CREATE
-  static async create(req, res, next) {
+  static async createIncome(req, res, next) {
     try {
       const { total, notes, UserId, IncomeCategoryId } = req.body;
 
@@ -96,7 +96,7 @@ class Controller {
   }
 
   // UPDATE
-  static async update(req, res, next) {
+  static async updateIncome(req, res, next) {
     try {
       const { id } = req.params;
 
@@ -141,7 +141,7 @@ class Controller {
   }
 
   // DELETE
-  static async delete(req, res, next) {
+  static async deleteIncome(req, res, next) {
     try {
       const { id } = req.params;
 
