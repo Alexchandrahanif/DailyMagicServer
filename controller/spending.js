@@ -42,6 +42,51 @@ class Controller {
     }
   }
 
+  // GET ALL by UserId
+  static async getAllSpendingByUserId(req, res, next) {
+    try {
+      const { UserId } = req.params;
+      const { limit, page, search, tanggal } = req.query;
+
+      let pagination = {
+        where: {
+          UserId,
+        },
+        order: [["createdAt", "DESC"]],
+      };
+
+      if (limit) {
+        pagination.limit = limit;
+      }
+
+      if (page && limit) {
+        pagination.offset = (page - 1) * limit;
+      }
+
+      if (search) {
+        pagination.where = {
+          UserId, //! apakah bener?
+          [Op.or]: [{ notes: { [Op.iLike]: `%${search}%` } }],
+        };
+      }
+
+      let dataSpending = await Spending.findAndCountAll(pagination);
+
+      let totalPage = Math.ceil(dataSpending.count / (limit ? limit : 50));
+
+      // SUKSES
+      res.status(200).json({
+        statusCode: 200,
+        message: "Berhasil Mendapatkan Semua Data Spending",
+        data: dataSpending.rows,
+        totaldataSpending: dataSpending.count,
+        totalPage: totalPage,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // GET ONE
   static async getOneSpending(req, res, next) {
     try {

@@ -42,6 +42,50 @@ class Controller {
     }
   }
 
+  static async getAllIncomeByUserId(req, res, next) {
+    try {
+      const { UserId } = req.params;
+      const { limit, page, search, tanggal } = req.query;
+
+      let pagination = {
+        where: {
+          UserId,
+        },
+        order: [["createdAt", "DESC"]],
+      };
+
+      if (limit) {
+        pagination.limit = limit;
+      }
+
+      if (page && limit) {
+        pagination.offset = (page - 1) * limit;
+      }
+
+      if (search) {
+        pagination.where = {
+          UserId, //! apakah bener?
+          [Op.or]: [{ notes: { [Op.iLike]: `%${search}%` } }],
+        };
+      }
+
+      let dataIncome = await Income.findAndCountAll(pagination);
+
+      let totalPage = Math.ceil(dataIncome.count / (limit ? limit : 50));
+
+      // SUKSES
+      res.status(200).json({
+        statusCode: 200,
+        message: "Berhasil Mendapatkan Semua Data Income",
+        data: dataIncome.rows,
+        totaldataIncome: dataIncome.count,
+        totalPage: totalPage,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // GET ONE
   static async getOneIncome(req, res, next) {
     try {

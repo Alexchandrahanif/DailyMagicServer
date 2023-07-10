@@ -4,6 +4,8 @@ const incomeRouter = require("express").Router();
 
 incomeRouter.get("/", Controller.getAllIncome);
 
+incomeRouter.get("/detail/:UserId", Controller.getAllIncomeByUserId);
+
 incomeRouter.get("/:id", Controller.getOneIncome);
 
 incomeRouter.post("/", Controller.createIncome);

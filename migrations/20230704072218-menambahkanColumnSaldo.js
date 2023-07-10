@@ -13,3 +13,5 @@ module.exports = {
     await queryInterface.removeColumn("Users", "totalBalance");
   },
 };
+
+//? contoh dari menambahkan migration, tanpa mengubah data tabel ketika ada perubahan

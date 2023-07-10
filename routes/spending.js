@@ -4,6 +4,8 @@ const spendingRouter = require("express").Router();
 
 spendingRouter.get("/", Controller.getAllSpending);
 
+spendingRouter.get("/detail/:UserId", Controller);
+
 spendingRouter.get("/:id", Controller.getOneSpending);
 
 spendingRouter.post("/", Controller.createSpending);

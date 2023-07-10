@@ -4,6 +4,8 @@ const savingRouter = require("express").Router();
 
 savingRouter.get("/", Controller.getAllSaving);
 
+savingRouter.get("/detail/:UserId", Controller.getAllSavingByUserId);
+
 savingRouter.get("/:id", Controller.getOneSaving);
 
 savingRouter.post("/", Controller.createSaving);

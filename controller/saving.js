@@ -42,6 +42,51 @@ class Controller {
     }
   }
 
+  // GET ALL By UserId
+  static async getAllSavingByUserId(req, res, next) {
+    try {
+      const { UserId } = req.params;
+      const { limit, page, search, tanggal } = req.query;
+
+      let pagination = {
+        where: {
+          UserId,
+        },
+        order: [["createdAt", "DESC"]],
+      };
+
+      if (limit) {
+        pagination.limit = limit;
+      }
+
+      if (page && limit) {
+        pagination.offset = (page - 1) * limit;
+      }
+
+      if (search) {
+        pagination.where = {
+          UserId, //! apakah bener?
+          [Op.or]: [{ notes: { [Op.iLike]: `%${search}%` } }],
+        };
+      }
+
+      let dataSaving = await Saving.findAndCountAll(pagination);
+
+      let totalPage = Math.ceil(dataSaving.count / (limit ? limit : 50));
+
+      // SUKSES
+      res.status(200).json({
+        statusCode: 200,
+        message: "Berhasil Mendapatkan Semua Data Saving",
+        data: dataSaving.rows,
+        totaldataSaving: dataSaving.count,
+        totalPage: totalPage,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // GET ONE
   static async getOneSaving(req, res, next) {
     try {

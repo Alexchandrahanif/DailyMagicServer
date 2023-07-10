@@ -8,7 +8,7 @@ module.exports = {
     queryInterface.sequelize.query(
       'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
     );
-    await queryInterface.createTable("Savings", {
+    await queryInterface.createTable("SavingCategories", {
       id: {
         allowNull: true,
         unique: true,
@@ -16,24 +16,11 @@ module.exports = {
         type: DataTypes.UUID,
         defaultValue: Sequelize.literal("uuid_generate_v4()"),
       },
-      total: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-      },
-      purpose: {
+      type: {
         type: Sequelize.STRING,
       },
       notes: {
-        type: Sequelize.STRING,
-      },
-      UserId: {
-        type: Sequelize.UUID,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "cascade",
-        onUpdate: "cascade",
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +33,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Savings");
+    await queryInterface.dropTable("SavingCategories");
   },
 };
