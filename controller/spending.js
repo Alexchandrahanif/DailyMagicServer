@@ -121,12 +121,40 @@ class Controller {
         note,
       };
 
+      if (SpendingCategoryId) {
+        body.SpendingCategoryId = SpendingCategoryId;
+      }
+
+      const dataSpendingCategories = await SpendingCategories.findOne({
+        where: {
+          id: SpendingCategoryId,
+        },
+      });
+
+      if (!dataSpendingCategories) {
+        throw { name: "Id Spending Categories Tidak Ditemukan" };
+      }
+
       if (UserId) {
         body.UserId = UserId;
       }
 
-      if (SpendingCategoryId) {
-        body.SpendingCategoryId = SpendingCategoryId;
+      const dataUser = await User.findOne({
+        where: {
+          id: UserId,
+        },
+      });
+
+      if (!dataUser) {
+        throw { name: "Id User Tidak Ditemukan" };
+      }
+
+      if (dataUser.totalBalance < total) {
+        throw { name: "Saldo Anda Tidak Cukup" };
+      }
+
+      if (dataUser.totalBalance > total) {
+        await dataUser.decrement("totalBalance", { by: total });
       }
       const dataSpending = await Spending.create(body);
 

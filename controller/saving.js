@@ -1,5 +1,5 @@
 const ValidateNumber = require("../helper/validateNumber");
-const { Saving } = require("../models");
+const { Saving, User, sequelize } = require("../models");
 
 class Controller {
   // GET ALL
@@ -114,7 +114,7 @@ class Controller {
   // CREATE
   static async createSaving(req, res, next) {
     try {
-      const { total, notes, UserId, purpose } = req.body;
+      const { total, notes, UserId, SavingCategoryId, purpose } = req.body;
 
       let body = {
         total: ValidateNumber(total),
@@ -122,8 +122,40 @@ class Controller {
         note,
       };
 
+      if (SavingCategoryId) {
+        body.SavingCategoryId = SavingCategoryId;
+      }
+
+      const dataSavingCategories = await SavingCategories.findOne({
+        where: {
+          id: SavingCategoryId,
+        },
+      });
+
+      if (!dataSavingCategories) {
+        throw { name: "Id Saving Categories Tidak Ditemukan" };
+      }
+
       if (UserId) {
         body.UserId = UserId;
+      }
+
+      const dataUser = await User.findOne({
+        where: {
+          id: UserId,
+        },
+      });
+
+      if (!dataUser) {
+        throw { name: "Id User Tidak Ditemukan" };
+      }
+
+      if (dataUser.totalBalance < total) {
+        throw { name: "Saldo Anda Tidak Cukup" };
+      }
+
+      if (dataUser.totalBalance > total) {
+        await dataUser.decrement("totalBalance", { by: total });
       }
 
       const dataSaving = await Saving.create(body);

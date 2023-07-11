@@ -42,6 +42,7 @@ class Controller {
     }
   }
 
+  // GET ALL By UserId
   static async getAllIncomeByUserId(req, res, next) {
     try {
       const { UserId } = req.params;
@@ -120,12 +121,40 @@ class Controller {
         note,
       };
 
+      if (IncomeCategoryId) {
+        body.IncomeCategoryId = IncomeCategoryId;
+      }
+
+      const dataIncomeCategories = await IncomeCategories.findOne({
+        where: {
+          id: IncomeCategoryId,
+        },
+      });
+
+      if (!dataIncomeCategories) {
+        throw { name: "Id Income Categories Tidak Ditemukan" };
+      }
+
       if (UserId) {
         body.UserId = UserId;
       }
 
-      if (IncomeCategoryId) {
-        body.IncomeCategoryId = IncomeCategoryId;
+      const dataUser = await User.findOne({
+        where: {
+          id: UserId,
+        },
+      });
+
+      if (!dataUser) {
+        throw { name: "Id User Tidak Ditemukan" };
+      }
+
+      if (dataUser.totalBalance < total) {
+        throw { name: "Saldo Anda Tidak Cukup" };
+      }
+
+      if (dataUser.totalBalance > total) {
+        await dataUser.decrement("totalBalance", { by: total });
       }
       const dataIncome = await Income.create(body);
 
