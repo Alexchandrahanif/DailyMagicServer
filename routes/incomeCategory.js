@@ -1,15 +1,36 @@
 const Controller = require("../controller/incomeCategory");
+const authentication = require("../middleware/authentication");
 
 const incomeCategoriesRouter = require("express").Router();
 
-incomeCategoriesRouter.get("/", Controller.getAllIncomeCategory);
+incomeCategoriesRouter.get(
+  "/",
+  authentication,
+  Controller.getAllIncomeCategory
+);
 
-incomeCategoriesRouter.get("/:id", Controller.getOneIncomeCategory);
+incomeCategoriesRouter.get(
+  "/:id",
+  authentication,
+  Controller.getOneIncomeCategory
+);
 
-incomeCategoriesRouter.post("/", Controller.createIncomeCategory);
+incomeCategoriesRouter.post(
+  "/",
+  authentication,
+  Controller.createIncomeCategory
+);
 
-incomeCategoriesRouter.patch("/:id", Controller.updateIncomeCategory);
+incomeCategoriesRouter.patch(
+  "/:id",
+  authentication,
+  Controller.updateIncomeCategory
+);
 
-incomeCategoriesRouter.delete("/:id", Controller.deleteIncomeCategory);
+incomeCategoriesRouter.delete(
+  "/:id",
+  authentication,
+  Controller.deleteIncomeCategory
+);
 
 module.exports = incomeCategoriesRouter;

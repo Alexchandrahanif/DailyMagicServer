@@ -1,5 +1,5 @@
 const ValidateNumber = require("../helper/validateNumber");
-const { Saving, User, sequelize } = require("../models");
+const { Saving, User, SavingCategories, sequelize } = require("../models");
 
 class Controller {
   // GET ALL
@@ -119,8 +119,16 @@ class Controller {
       let body = {
         total: ValidateNumber(total),
         purpose,
-        note,
+        notes,
       };
+
+      if (SavingCategoryId == "") {
+        throw { name: "Id Saving Categories Tidak Ditemukan" };
+      }
+
+      if (UserId == "") {
+        throw { name: "Id User Tidak Ditemukan" };
+      }
 
       if (SavingCategoryId) {
         body.SavingCategoryId = SavingCategoryId;
@@ -146,17 +154,17 @@ class Controller {
         },
       });
 
+      console.log(dataUser.totalBalance);
+
       if (!dataUser) {
         throw { name: "Id User Tidak Ditemukan" };
       }
 
-      if (dataUser.totalBalance < total) {
+      if (dataUser.totalBalance < +total) {
         throw { name: "Saldo Anda Tidak Cukup" };
       }
 
-      if (dataUser.totalBalance > total) {
-        await dataUser.decrement("totalBalance", { by: total });
-      }
+      await dataUser.decrement("totalBalance", { by: total });
 
       const dataSaving = await Saving.create(body);
 
@@ -174,28 +182,53 @@ class Controller {
   static async updateSaving(req, res, next) {
     try {
       const { id } = req.params;
+      const { total, notes, purpose, SavingCategoryId } = req.body;
+
+      if (SavingCategoryId == "") {
+        throw { name: "Id Saving Categories Tidak Ditemukan" };
+      }
 
       const dataSaving = await Saving.findOne({
         where: {
           id,
         },
+        include: [
+          {
+            model: User,
+          },
+        ],
       });
 
       if (!dataSaving) {
         throw { name: "Id Saving Tidak Ditemukan" };
       }
 
-      const { total, notes, UserId, purpose } = req.body;
+      let saldo = dataSaving.User.totalBalance;
+      let kembali = dataSaving.total;
+
+      let akhir = saldo + kembali - +total;
+
+      if (+saldo + +kembali - +total < 0) {
+        throw { name: "Saldo Anda Tidak Cukup" };
+      }
+
+      await User.update(
+        {
+          totalBalance: +akhir,
+        },
+        {
+          where: {
+            id: dataSaving.User.id,
+          },
+        }
+      );
 
       let body = {
         total: ValidateNumber(total),
         purpose,
-        note,
+        notes,
+        SavingCategoryId,
       };
-
-      if (UserId) {
-        body.UserId = UserId;
-      }
 
       await Saving.update(body, {
         where: {

@@ -1,5 +1,5 @@
 const ValidateNumber = require("../helper/validateNumber");
-const { Income } = require("../models");
+const { Income, User, IncomeCategories } = require("../models");
 
 class Controller {
   // GET ALL
@@ -116,9 +116,17 @@ class Controller {
     try {
       const { total, notes, UserId, IncomeCategoryId } = req.body;
 
+      if (IncomeCategoryId == "") {
+        throw { name: "Id Income Categories Tidak Ditemukan" };
+      }
+
+      if (UserId == "") {
+        throw { name: "Id User Tidak Ditemukan" };
+      }
+
       let body = {
         total: ValidateNumber(total),
-        note,
+        notes,
       };
 
       if (IncomeCategoryId) {
@@ -149,13 +157,8 @@ class Controller {
         throw { name: "Id User Tidak Ditemukan" };
       }
 
-      if (dataUser.totalBalance < total) {
-        throw { name: "Saldo Anda Tidak Cukup" };
-      }
+      await dataUser.increment("totalBalance", { by: total });
 
-      if (dataUser.totalBalance > total) {
-        await dataUser.decrement("totalBalance", { by: total });
-      }
       const dataIncome = await Income.create(body);
 
       res.status(201).json({
@@ -172,27 +175,31 @@ class Controller {
   static async updateIncome(req, res, next) {
     try {
       const { id } = req.params;
+      const { total, notes, IncomeCategoryId } = req.body;
+
+      if (IncomeCategoryId == "") {
+        throw { name: "Id Income Categories Tidak Ditemukan" };
+      }
 
       const dataIncome = await Income.findOne({
         where: {
           id,
         },
+        include: [
+          {
+            model: User,
+          },
+        ],
       });
 
       if (!dataIncome) {
         throw { name: "Id Income Tidak Ditemukan" };
       }
 
-      const { total, notes, UserId, IncomeCategoryId } = req.body;
-
       let body = {
         total: ValidateNumber(total),
-        note,
+        notes,
       };
-
-      if (UserId) {
-        body.UserId = UserId;
-      }
 
       if (IncomeCategoryId) {
         body.IncomeCategoryId = IncomeCategoryId;
@@ -203,6 +210,22 @@ class Controller {
           id,
         },
       });
+
+      let saldo = +dataIncome.User.totalBalance - +dataIncome.total + +total;
+      if (saldo < 0) {
+        throw { name: "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan" };
+      }
+
+      await User.update(
+        {
+          totalBalance: saldo,
+        },
+        {
+          where: {
+            id: dataIncome.User.id,
+          },
+        }
+      );
 
       res.status(200).json({
         statusCode: 200,

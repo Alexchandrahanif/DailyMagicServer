@@ -53,6 +53,32 @@ const handleError = (err, req, res, next) => {
     message = "Id Spending Categories Tidak Ditemukan";
   }
 
+  //
+  else if (err.name === "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan") {
+    code = 400;
+    message = "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan";
+  } else if (err.name === "Saldo Anda Tidak Cukup") {
+    code = 400;
+    message = "Saldo Anda Tidak Cukup";
+  }
+  //
+  else if (err.name === "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan") {
+    code = 400;
+    message = "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan";
+  } else if (err.name === "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan") {
+    code = 400;
+    message = "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan";
+  } else if (err.name === "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan") {
+    code = 400;
+    message = "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan";
+  } else if (err.name === "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan") {
+    code = 400;
+    message = "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan";
+  } else if (err.name === "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan") {
+    code = 400;
+    message = "Tidak Bisa Karena Uang Nya Sudah Anda Gunakan";
+  }
+
   // JSON
   else if (err.name === "JsonWebTokenError") {
     code = 401;

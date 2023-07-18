@@ -57,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      totalBalance: DataTypes.INTEGER,
       phoneNumber: DataTypes.STRING,
       photoUser: DataTypes.STRING,
       address: DataTypes.STRING,

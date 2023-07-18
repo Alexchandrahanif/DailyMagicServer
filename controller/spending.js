@@ -1,5 +1,5 @@
 const ValidateNumber = require("../helper/validateNumber");
-const { Spending } = require("../models");
+const { Spending, User, SpendingCategories } = require("../models");
 
 class Controller {
   // GET ALL
@@ -118,9 +118,15 @@ class Controller {
 
       let body = {
         total: ValidateNumber(total),
-        note,
+        notes,
       };
 
+      if (SpendingCategoryId == "") {
+        throw { name: "Id Spending Categories Tidak Ditemukan" };
+      }
+      if (UserId == "") {
+        throw { name: "Id User Tidak Ditemukan" };
+      }
       if (SpendingCategoryId) {
         body.SpendingCategoryId = SpendingCategoryId;
       }
@@ -172,33 +178,56 @@ class Controller {
   static async updateSpending(req, res, next) {
     try {
       const { id } = req.params;
+      const { total, notes, SpendingCategoryId } = req.body;
+
+      if (SpendingCategoryId == "") {
+        throw { name: "Id Spending Categories Tidak Ditemukan" };
+      }
 
       const dataSpending = await Spending.findOne({
         where: {
           id,
         },
+        include: [
+          {
+            model: User,
+          },
+        ],
       });
 
       if (!dataSpending) {
         throw { name: "Id Spending Tidak Ditemukan" };
       }
 
-      const { total, notes, UserId, SpendingCategoryId } = req.body;
+      let saldo = dataSpending.User.totalBalance;
+      let kembali = dataSpending.total;
 
+      let akhir = +saldo + +kembali - +total;
+
+      if (saldo + kembali - total < 0) {
+        throw { name: "Saldo Anda Tidak Cukup" };
+      }
       let body = {
         total: ValidateNumber(total),
-        note,
+        notes,
       };
 
-      if (UserId) {
-        body.UserId = UserId;
-      }
+      await User.update(
+        {
+          totalBalance: akhir,
+        },
+        {
+          where: {
+            id: dataSpending.User.id,
+          },
+        }
+      );
 
       if (SpendingCategoryId) {
         body.SpendingCategoryId = SpendingCategoryId;
       }
 
-      await Spending.update(body, {
+      await await Spending.update(body, {
         where: {
           id,
         },
