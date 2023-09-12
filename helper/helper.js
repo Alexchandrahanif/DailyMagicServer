@@ -6,9 +6,7 @@ const comparePassword = (password, hash) => bcrypt.compareSync(password, hash);
 
 // TOKEN REST API
 const createAccessToken = (payload) =>
-  jwt.sign(payload, process.env.SECRET_KEY, {
-    expiresIn: "1d",
-  });
+  jwt.sign(payload, process.env.SECRET_KEY);
 
 const verifyAccessToken = (access_token) =>
   jwt.verify(access_token, process.env.SECRET_KEY);

@@ -8,6 +8,11 @@ class Controller {
       const { limit, page, search, tanggal } = req.query;
 
       let pagination = {
+        include: [
+          {
+            model: SavingCategories,
+          },
+        ],
         order: [["createdAt", "DESC"]],
       };
 
@@ -153,8 +158,6 @@ class Controller {
           id: UserId,
         },
       });
-
-      console.log(dataUser.totalBalance);
 
       if (!dataUser) {
         throw { name: "Id User Tidak Ditemukan" };
