@@ -19,7 +19,7 @@ module.exports = {
       type: {
         type: Sequelize.STRING,
       },
-      notes: {
+      note: {
         type: Sequelize.TEXT,
       },
       createdAt: {

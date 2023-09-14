@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   SpendingCategories.init(
     {
       type: DataTypes.STRING,
-      notes: DataTypes.TEXT,
+      note: DataTypes.TEXT,
     },
     {
       sequelize,

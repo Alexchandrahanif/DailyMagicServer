@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "postgres",
-    "database": "projectreact",
+    "database": "DailyMagic",
     "host": "localhost",
     "dialect": "postgres"
   },

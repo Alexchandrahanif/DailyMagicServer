@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   IncomeCategories.init(
     {
       type: DataTypes.STRING,
-      notes: DataTypes.TEXT,
+      note: DataTypes.TEXT,
     },
     {
       sequelize,
