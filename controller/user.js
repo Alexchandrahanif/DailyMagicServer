@@ -96,7 +96,13 @@ class Controller {
       // SUCCESS
       res.status(200).json({
         statusCode: 200,
-        data: { authorization, id: dataUser.id },
+        message: "Selamat Datang " + dataUser.username,
+        data: {
+          authorization,
+          id: dataUser.id,
+          email: dataUser.email,
+          username: dataUser.username,
+        },
       });
     } catch (error) {
       await t.rollback();
