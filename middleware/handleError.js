@@ -51,6 +51,9 @@ const handleError = (err, req, res, next) => {
   } else if (err.name === "Id Spending Categories Tidak Ditemukan") {
     code = 400;
     message = "Id Spending Categories Tidak Ditemukan";
+  } else if (err.name === "Undangan Tidak Ditemukan") {
+    code = 400;
+    message = "Undangan Tidak Ditemukan";
   }
 
   //
